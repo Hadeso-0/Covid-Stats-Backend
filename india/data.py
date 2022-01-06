@@ -1,23 +1,29 @@
 import pandas as pd
 from .models import OverallData
-import ssl
 
 url_list = {
     'india_timeseries': "https://api.covid19tracker.in/data/csv/latest/case_time_series.csv"
 }
 
 
-def get_timeseries_data():
-    ssl._create_default_https_context = ssl._create_unverified_context
+def get_timeseries_data(range_type):
     df = pd.read_csv(url_list['india_timeseries'])
     timeseries_data = []
-    for row in range(len(df)):
+
+    end = len(df)
+
+    start = 0
+    if range_type == 'week':
+        start = end - 7
+    elif range_type == 'month':
+        start = end - 30
+
+    for row in range(start, end):
         timeseries_data.append(get_model_from_df(df, row))
     return timeseries_data
 
 
 def get_current_data():
-    ssl._create_default_https_context = ssl._create_unverified_context
     df = pd.read_csv(url_list['india_timeseries'])
     ind = len(df) - 1
     return get_model_from_df(df, ind)

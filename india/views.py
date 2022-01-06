@@ -13,7 +13,21 @@ def index(request):
 
 @api_view(['GET'])
 def get_timeseries_data(request):
-    data_list = data.get_timeseries_data()
+    data_list = data.get_timeseries_data('all')
+    serializer = OverallDataSerializer(data_list, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_timeseries_data_last_week(request):
+    data_list = data.get_timeseries_data('week')
+    serializer = OverallDataSerializer(data_list, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_timeseries_data_last_month(request):
+    data_list = data.get_timeseries_data('month')
     serializer = OverallDataSerializer(data_list, many=True)
     return Response(serializer.data)
 
