@@ -1,0 +1,7 @@
+.idea
+db.sqlite3
+covid_stats/__pycache__/
+district/__pycache__/
+india/__pycache__/
+state/__pycache__/
+world/__pycache__/
