@@ -1,5 +1,5 @@
 import ssl, pandas
-from .models import CountryData
+from .models import CountryData, CountryTimeseries
 
 url_list = {
     'country_timeseries': "https://covid19.who.int/WHO-COVID-19-global-data.csv",
@@ -28,6 +28,24 @@ def get_country_data_list():
 
     return data_list
 
+
+def get_country_timeseries_data(name):
+    ssl._create_default_https_context = ssl._create_unverified_context
+    df = pandas.read_csv(url_list['country_timeseries'])
+
+    gk = df.groupby('Country')
+    country_df = gk.get_group(name)
+
+    index_list = []
+    for index, row in country_df.iterrows():
+        index_list.append(index)
+
+    data_list = []
+    for ind in index_list:
+        data_list.append(get_country_timeseries_model_from_df(country_df, ind))
+    return data_list
+
+
 def get_country_model_from_df(df, index):
     name = index
     if index == 'Global':
@@ -49,6 +67,24 @@ def get_country_model_from_df(df, index):
     )
 
     return country_data
+
+
+def get_country_timeseries_model_from_df(df, index):
+    date = df.loc[index, 'Date_reported']
+    total_confirmed = check_if_blank(df.loc[index, 'Cumulative_cases'])
+    daily_confirmed = check_if_blank(df.loc[index, 'New_cases'])
+    total_deaths = check_if_blank(df.loc[index, 'Cumulative_deaths'])
+    daily_deaths = check_if_blank(df.loc[index, 'New_deaths'])
+
+    timeseries_data = CountryTimeseries(
+        date=date,
+        total_confirmed=total_confirmed,
+        daily_confirmed=daily_confirmed,
+        total_deaths=total_deaths,
+        daily_deaths=daily_deaths
+    )
+
+    return timeseries_data
 
 
 def check_if_blank(str):

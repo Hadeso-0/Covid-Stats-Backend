@@ -13,3 +13,14 @@ class CountryData(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class CountryTimeseries(models.Model):
+    date = models.DateTimeField(primary_key=True)
+    total_confirmed = models.BigIntegerField()
+    daily_confirmed = models.BigIntegerField()
+    total_deaths = models.BigIntegerField()
+    daily_deaths = models.BigIntegerField()
+
+    def __str__(self):
+        return self.date
