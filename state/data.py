@@ -9,7 +9,6 @@ url_list = {
 
 
 def get_all_state_data():
-    ssl._create_default_https_context = ssl._create_unverified_context
     df = pandas.read_csv(url_list['state_current'])
 
     data_list = []
@@ -20,7 +19,6 @@ def get_all_state_data():
 
 
 def get_individual_state_date(state):
-    ssl._create_default_https_context = ssl._create_unverified_context
     df = pandas.read_csv(url_list['state_current'])
 
     gk = df.groupby('state')
@@ -31,7 +29,6 @@ def get_individual_state_date(state):
 
 
 def get_timeseries(state, range_type):
-    ssl._create_default_https_context = ssl._create_unverified_context
     df = pandas.read_csv(url_list['state_timeseries'])
 
     gk = df.groupby('state')
