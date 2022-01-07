@@ -1,5 +1,5 @@
 import ssl, pandas
-from .models import CountryData, CountryTimeseries
+from .models import CountryData, CountryTimeseries, RegionData
 
 url_list = {
     'country_timeseries': "https://covid19.who.int/WHO-COVID-19-global-data.csv",
@@ -36,9 +36,9 @@ def get_region_list():
     for index, row in df.iterrows():
         if index == 'Global':
             continue
-        region_list.add(df.loc[index, 'Name'])
+        region_list.add(RegionData(df.loc[index, 'Name']))
 
-    return region_list
+    return list(region_list)
 
 
 def get_country_timeseries_data(name, range_type):

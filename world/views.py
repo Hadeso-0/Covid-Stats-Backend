@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from rest_framework.response import Response
-from .serializers import CountryDataSerializer, CountryTimeseriesSerializer
+from .serializers import CountryDataSerializer, CountryTimeseriesSerializer, RegionDataSerializer
 from . import data
 from rest_framework.decorators import api_view
 import json
@@ -57,5 +57,5 @@ def get_country_timeseries_data_month(request, name):
 @api_view(['GET'])
 def get_who_region_list(request):
     region_list = data.get_region_list()
-    data_list = json.dumps(list(region_list))
-    return Response(data_list)
+    serializer = RegionDataSerializer(region_list, many=True)
+    return Response(serializer.data)
