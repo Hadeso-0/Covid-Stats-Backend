@@ -10,13 +10,11 @@ url_list = {
 
 
 def get_country_data(name):
-    ssl._create_default_https_context = ssl._create_unverified_context
     df = pandas.read_csv(url_list['country_current'])
     return get_country_model_from_df(df, name)
 
 
 def get_country_data_list():
-    ssl._create_default_https_context = ssl._create_unverified_context
     df = pandas.read_csv(url_list['country_current'])
 
     data_list = []
@@ -29,8 +27,21 @@ def get_country_data_list():
     return data_list
 
 
-def get_country_timeseries_data(name, range_type):
+def get_region_list():
     ssl._create_default_https_context = ssl._create_unverified_context
+    df = pandas.read_csv(url_list['country_current'])
+
+    region_list = {}
+
+    for index, row in df.iterrows():
+        if index == 'Global':
+            continue
+        region_list.add(df.loc[index, 'Name'])
+
+    return region_list
+
+
+def get_country_timeseries_data(name, range_type):
     df = pandas.read_csv(url_list['country_timeseries'])
 
     gk = df.groupby('Country')
