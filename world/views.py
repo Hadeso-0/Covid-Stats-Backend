@@ -59,3 +59,10 @@ def get_who_region_list(request):
     region_list = data.get_region_list()
     serializer = RegionDataSerializer(region_list, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_region_data(request, region):
+    data_list = data.get_region_wise_data(region)
+    serializer = CountryDataSerializer(data_list, many=True)
+    return Response(serializer.data)
