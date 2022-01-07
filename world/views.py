@@ -34,6 +34,20 @@ def get_country_data(request, name):
 
 @api_view(['GET'])
 def get_country_timeseries_data(request, name):
-    data_list = data.get_country_timeseries_data(name)
+    data_list = data.get_country_timeseries_data(name, 'all')
+    serializer = CountryTimeseriesSerializer(data_list, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_country_timeseries_data_week(request, name):
+    data_list = data.get_country_timeseries_data(name, 'week')
+    serializer = CountryTimeseriesSerializer(data_list, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_country_timeseries_data_month(request, name):
+    data_list = data.get_country_timeseries_data(name, 'month')
     serializer = CountryTimeseriesSerializer(data_list, many=True)
     return Response(serializer.data)

@@ -29,7 +29,7 @@ def get_country_data_list():
     return data_list
 
 
-def get_country_timeseries_data(name):
+def get_country_timeseries_data(name, range_type):
     ssl._create_default_https_context = ssl._create_unverified_context
     df = pandas.read_csv(url_list['country_timeseries'])
 
@@ -39,6 +39,11 @@ def get_country_timeseries_data(name):
     index_list = []
     for index, row in country_df.iterrows():
         index_list.append(index)
+
+    if range_type == 'week':
+        index_list = index_list[-7:]
+    elif range_type == 'month':
+        index_list = index_list[-30:]
 
     data_list = []
     for ind in index_list:
