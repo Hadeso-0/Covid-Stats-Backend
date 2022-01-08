@@ -8,53 +8,24 @@ url_list = {
 }
 
 
-def initialize_state_info():
-    state_info_list = StateInfo.objects.all()
-    if len(state_info_list) == 36:
-        return
-
-    df = pandas.read_csv(url_list['state_info'])
-    gk = df.groupby('country_name')
-    ind_df = gk.get_group('India')
-
-    count = 0
-
-    for index, row in ind_df.iterrows():
-        count = count + 1
-        code = ind_df.loc[index, 'state_code']
-        print(f"Adding {count} - {code} in DB")
-        state_info = StateInfo(
-            code=code,
-            name=ind_df.loc[index, 'name']
-        )
-        state_info.save()
-
-
 def get_state_info_list():
-    initialize_state_info()
-    info_list = StateInfo.objects.all()
-    return info_list
+    return StateInfo.objects.all()
 
 
 def get_state_info(code):
-    initialize_state_info()
-    state_info = StateInfo.objects.get(code=code)
-    return state_info
+    return StateInfo.objects.get(code=code)
 
 
 def get_all_state_data():
-    initialize_state_info()
     df = pandas.read_csv(url_list['state_current'])
 
     data_list = []
     for index in range(len(df)):
         data_list.append(get_state_model_from_df(df, index))
-
     return data_list
 
 
 def get_state_date(code):
-    initialize_state_info()
     df = pandas.read_csv(url_list['state_current'])
 
     gk = df.groupby('state')
@@ -65,7 +36,6 @@ def get_state_date(code):
 
 
 def get_timeseries(code, range_type):
-    initialize_state_info()
     df = pandas.read_csv(url_list['state_timeseries'])
 
     gk = df.groupby('state')
@@ -127,17 +97,41 @@ def get_state_timeseries_from_df(df, index):
     return data_entry
 
 
-def check_if_blank(str):
-    if str == '' or str is None:
-        str = '0'
-    return str
-
-
 def get_state_name_from_code(code):
+    initialize_state_info()
     state_info = StateInfo.objects.get(code=code)
     return state_info.name
 
 
 def get_state_code_from_name(name):
+    initialize_state_info()
     state_info = StateInfo.objects.get(name=name)
     return state_info.code
+
+
+def initialize_state_info():
+    state_info_list = StateInfo.objects.all()
+    if len(state_info_list) == 36:
+        return
+
+    df = pandas.read_csv(url_list['state_info'])
+    gk = df.groupby('country_name')
+    ind_df = gk.get_group('India')
+
+    count = 0
+
+    for index, row in ind_df.iterrows():
+        count = count + 1
+        code = ind_df.loc[index, 'state_code']
+        print(f"Adding {count} - {code} in DB")
+        state_info = StateInfo(
+            code=code,
+            name=ind_df.loc[index, 'name']
+        )
+        state_info.save()
+
+
+def check_if_blank(str):
+    if str == '' or str is None:
+        str = '0'
+    return str
