@@ -6,8 +6,6 @@ from django.db import models
 class StateInfo(models.Model):
     code = models.CharField(max_length=10, primary_key=True)
     name = models.CharField(max_length=100)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
 
     def __str__(self):
         return f"State Info - {self.code}"
@@ -15,6 +13,7 @@ class StateInfo(models.Model):
 
 class StateData(models.Model):
     code = models.CharField(max_length=10, primary_key=True)
+    name = models.CharField(max_length=100)
     confirmed = models.BigIntegerField()
     recovered = models.BigIntegerField()
     deceased = models.BigIntegerField()

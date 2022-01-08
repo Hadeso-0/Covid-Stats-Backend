@@ -1,6 +1,5 @@
 import pandas
 from .models import StateData, StateTimeseriesData, StateInfo
-import ssl
 
 url_list = {
     'state_timeseries': "https://api.covid19tracker.in/data/csv/latest/states.csv",
@@ -15,7 +14,7 @@ def initialize_state_info():
         return
 
     df = pandas.read_csv(url_list['state_info'])
-    gk = df.groupby('country_code')
+    gk = df.groupby('country_name')
     ind_df = gk.get_group('India')
 
     count = 0
@@ -26,9 +25,7 @@ def initialize_state_info():
         print(f"Adding {count} - {code} in DB")
         state_info = StateInfo(
             code=code,
-            name=ind_df.loc[index, 'name'],
-            latitude=ind_df.loc[index, 'latitude'],
-            longitude=ind_df.loc[index, 'longitude']
+            name=ind_df.loc[index, 'name']
         )
         state_info.save()
 
@@ -101,6 +98,7 @@ def get_state_model_from_df(df, index):
 
     data_entry = StateData(
         code=get_state_code_from_name(name),
+        name=name,
         confirmed=confirmed,
         recovered=recovered,
         deceased=deceased,
@@ -130,7 +128,7 @@ def get_state_timeseries_from_df(df, index):
 
 
 def check_if_blank(str):
-    if str == '':
+    if str == '' or str is None:
         str = '0'
     return str
 
