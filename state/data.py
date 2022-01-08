@@ -1,14 +1,52 @@
 import pandas
-from .models import StateData, StateTimeseriesData
+from .models import StateData, StateTimeseriesData, StateInfo
 import ssl
 
 url_list = {
     'state_timeseries': "https://api.covid19tracker.in/data/csv/latest/states.csv",
-    'state_current': "https://api.covid19tracker.in/data/csv/latest/state_wise.csv"
+    'state_current': "https://api.covid19tracker.in/data/csv/latest/state_wise.csv",
+    'state_info': "https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/csv/states.csv"
 }
 
 
+def initialize_state_info():
+    state_info_list = StateInfo.objects.all()
+    if len(state_info_list) == 36:
+        return
+
+    df = pandas.read_csv(url_list['state_info'])
+    gk = df.groupby('country_code')
+    ind_df = gk.get_group('India')
+
+    count = 0
+
+    for index, row in ind_df.iterrows():
+        count = count + 1
+        code = ind_df.loc[index, 'state_code']
+        print(f"Adding {count} - {code} in DB")
+        state_info = StateInfo(
+            code=code,
+            name=ind_df.loc[index, 'name'],
+            latitude=ind_df.loc[index, 'latitude'],
+            longitude=ind_df.loc[index, 'longitude']
+        )
+        state_info.save()
+
+
+def get_state_info_list():
+    initialize_state_info()
+    info_list = StateInfo.objects.all()
+    return info_list
+
+
+def get_state_info(code):
+    initialize_state_info()
+    state_info = StateInfo.objects.get(code=code)
+    return state_info
+
+
 def get_all_state_data():
+    initialize_state_info()
     df = pandas.read_csv(url_list['state_current'])
 
     data_list = []
@@ -18,21 +56,23 @@ def get_all_state_data():
     return data_list
 
 
-def get_individual_state_date(state):
+def get_state_date(code):
+    initialize_state_info()
     df = pandas.read_csv(url_list['state_current'])
 
     gk = df.groupby('state')
-    state_df = gk.get_group(state)
+    state_df = gk.get_group(get_state_name_from_code(code))
 
     for row, index in state_df.iterrows():
         return get_state_model_from_df(state_df, row)
 
 
-def get_timeseries(state, range_type):
+def get_timeseries(code, range_type):
+    initialize_state_info()
     df = pandas.read_csv(url_list['state_timeseries'])
 
     gk = df.groupby('state')
-    state_df = gk.get_group(state)
+    state_df = gk.get_group(get_state_name_from_code(code))
 
     index_list = []
     for index, row in state_df.iterrows():
@@ -60,7 +100,7 @@ def get_state_model_from_df(df, index):
     last_updated = df.loc[index, 'Last Updated']
 
     data_entry = StateData(
-        name=name,
+        code=get_state_code_from_name(name),
         confirmed=confirmed,
         recovered=recovered,
         deceased=deceased,
@@ -93,3 +133,13 @@ def check_if_blank(str):
     if str == '':
         str = '0'
     return str
+
+
+def get_state_name_from_code(code):
+    state_info = StateInfo.objects.get(code=code)
+    return state_info.name
+
+
+def get_state_code_from_name(name):
+    state_info = StateInfo.objects.get(name=name)
+    return state_info.code

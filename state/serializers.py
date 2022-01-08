@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from .models import StateData, StateTimeseriesData
+from .models import StateData, StateTimeseriesData, StateInfo
+
+
+class StateInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StateInfo
+        fields = '__all__'
 
 
 class StateDataSerializer(serializers.ModelSerializer):

@@ -3,8 +3,18 @@ from django.db import models
 
 # Create your models here.
 
+class StateInfo(models.Model):
+    code = models.CharField(max_length=10, primary_key=True)
+    name = models.CharField(max_length=100)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+
+    def __str__(self):
+        return f"State Info - {self.code}"
+
+
 class StateData(models.Model):
-    name = models.CharField(max_length=100, primary_key=True)
+    code = models.CharField(max_length=10, primary_key=True)
     confirmed = models.BigIntegerField()
     recovered = models.BigIntegerField()
     deceased = models.BigIntegerField()
@@ -12,7 +22,7 @@ class StateData(models.Model):
     last_updated = models.DateTimeField()
 
     def __str__(self):
-        return self.name
+        return f"State - {self.code}"
 
 
 class StateTimeseriesData(models.Model):
@@ -23,4 +33,4 @@ class StateTimeseriesData(models.Model):
     active = models.BigIntegerField()
 
     def __str__(self):
-        return self.date
+        return f"State Timeseries - {self.date}"
