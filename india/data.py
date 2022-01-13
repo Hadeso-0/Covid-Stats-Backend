@@ -50,7 +50,7 @@ def get_model_from_df(df, row):
     return data_entry
 
 
-def check_if_blank(str):
-    if str == '':
-        str = '0'
-    return str
+def check_if_blank(str_entry):
+    if str_entry == '' or str_entry is None:
+        str_entry = '0'
+    return str_entry

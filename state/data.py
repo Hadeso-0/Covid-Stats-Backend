@@ -9,10 +9,12 @@ url_list = {
 
 
 def get_state_info_list():
+    initialize_state_info()
     return StateInfo.objects.all()
 
 
 def get_state_info(code):
+    initialize_state_info()
     return StateInfo.objects.get(code=code)
 
 
@@ -131,7 +133,7 @@ def initialize_state_info():
         state_info.save()
 
 
-def check_if_blank(str):
-    if str == '' or str is None:
-        str = '0'
-    return str
+def check_if_blank(str_entry):
+    if str_entry == '' or str_entry is None:
+        str_entry = '0'
+    return str_entry
