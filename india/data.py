@@ -13,8 +13,8 @@ def get_current_data():
     ind = len(df) - 1
     current_data = get_model_from_df(df, ind)
 
-    if current_data.daily_confirmed == 0:
-        return get_model_from_df(df, ind-1)
+    if current_data.is_empty():
+        return get_model_from_df(df, ind - 1)
     else:
         return current_data
 
@@ -24,6 +24,8 @@ def get_timeseries_data(range_type):
     df = pd.read_csv(url_list['india_timeseries'])
 
     end = len(df)
+    if get_model_from_df(df, end-1).is_empty():
+        end = end - 1
     start = 0
     if range_type == 'week':
         start = end - 7

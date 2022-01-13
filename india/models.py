@@ -14,3 +14,8 @@ class OverallData(models.Model):
 
     def __str__(self):
         return f"India - {self.date}"
+
+    def is_empty(self):
+        if self.daily_confirmed == "0" or self.daily_confirmed == 0:
+            return True
+        return False
