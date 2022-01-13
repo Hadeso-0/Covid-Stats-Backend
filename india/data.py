@@ -8,7 +8,7 @@ url_list = {
 
 
 def get_current_data():
-    ssl._create_default_https_context = ssl._create_unverified_context
+    #   ssl._create_default_https_context = ssl._create_unverified_context
     df = pd.read_csv(url_list['india_timeseries'])
     ind = len(df) - 1
     current_data = get_model_from_df(df, ind)
@@ -20,7 +20,7 @@ def get_current_data():
 
 
 def get_timeseries_data(range_type):
-    ssl._create_default_https_context = ssl._create_unverified_context
+    #   ssl._create_default_https_context = ssl._create_unverified_context
     df = pd.read_csv(url_list['india_timeseries'])
 
     end = len(df)
