@@ -1,5 +1,17 @@
 from rest_framework import serializers
-from .models import CountryData, CountryTimeseries, RegionData
+from .models import RegionInfo, CountryInfo, CountryData, CountryTimeseries
+
+
+class RegionInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegionInfo
+        fields = '__all__'
+
+
+class CountryInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CountryInfo
+        fields = '__all__'
 
 
 class CountryDataSerializer(serializers.ModelSerializer):
@@ -11,10 +23,4 @@ class CountryDataSerializer(serializers.ModelSerializer):
 class CountryTimeseriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = CountryTimeseries
-        fields = '__all__'
-
-
-class RegionDataSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RegionData
         fields = '__all__'
