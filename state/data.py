@@ -1,10 +1,12 @@
-import pandas
-from .models import StateData, StateTimeseriesData, StateInfo
+import pandas, ssl
+from .models import StateData, StateTimeseriesData, StateInfo, DistrictData
 
 url_list = {
     'state_timeseries': "https://api.covid19tracker.in/data/csv/latest/states.csv",
     'state_current': "https://api.covid19tracker.in/data/csv/latest/state_wise.csv",
-    'state_info': "https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/csv/states.csv"
+    'state_info': "https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/csv/states.csv",
+    'district_timeseries': "https://data.covid19bharat.org/csv/latest/districts.csv",
+    'district_current': "https://data.covid19bharat.org/csv/latest/district_wise.csv"
 }
 
 
@@ -60,6 +62,56 @@ def get_timeseries(code, range_type):
     return data_list
 
 
+def get_district_data_list(code):
+    df = pandas.read_csv(url_list['district_current'])
+    gk = df.groupby('State_Code')
+
+    state_df = gk.get_group(code)
+
+    data_list = []
+    for index, row in state_df.iterrows():
+        data_list.append(get_district_model_from_df(state_df, index))
+
+    return data_list
+
+
+def get_district_data(code, name):
+    key = f"{code}_{name}"
+
+    df = pandas.read_csv(url_list['district_current'])
+    gk = df.groupby('District_Key')
+
+    district_df = gk.get_group(key)
+    for index, row in district_df.iterrows():
+        return get_district_model_from_df(district_df, index)
+
+
+def get_district_data_timeseries(code, name, range_type):
+    state_name = get_state_name_from_code(code)
+
+    df = pandas.read_csv(url_list['district_timeseries'])
+
+    gk1 = df.groupby('State')
+    state_df = gk1.get_group(state_name)
+    gk2 = state_df.groupby('District')
+    district_df = gk2.get_group(name)
+
+    index_list = []
+    for index, row in district_df.iterrows():
+        index_list.append(index)
+
+    if range_type == 'Week':
+        index_list = index_list[-7:]
+    elif range_type == 'Month':
+        index_list = index_list[-30:]
+
+    data_list = []
+    for index in index_list:
+        data_list.append(get_state_timeseries_from_df(district_df, index))
+
+    return data_list
+
+
 def get_state_model_from_df(df, index):
     name = df.loc[index, 'state']
     confirmed = check_if_blank(df.loc[index, 'confirmed'])
@@ -90,6 +142,24 @@ def get_state_timeseries_from_df(df, index):
 
     data_entry = StateTimeseriesData(
         date=date,
+        confirmed=confirmed,
+        recovered=recovered,
+        deceased=deceased,
+        active=active
+    )
+
+    return data_entry
+
+
+def get_district_model_from_df(df, index):
+    name = df.loc[index, 'District']
+    confirmed = check_if_blank(df.loc[index, 'Confirmed'])
+    recovered = check_if_blank(df.loc[index, 'Recovered'])
+    deceased = check_if_blank(df.loc[index, 'Deceased'])
+    active = check_if_blank(df.loc[index, 'Active'])
+
+    data_entry = DistrictData(
+        name=name,
         confirmed=confirmed,
         recovered=recovered,
         deceased=deceased,

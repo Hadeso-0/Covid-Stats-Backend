@@ -24,6 +24,17 @@ class StateData(models.Model):
         return f"State - {self.code}"
 
 
+class DistrictData(models.Model):
+    name = models.CharField(max_length=100, primary_key=True)
+    confirmed = models.BigIntegerField()
+    recovered = models.BigIntegerField()
+    deceased = models.BigIntegerField()
+    active = models.BigIntegerField()
+
+    def __str__(self):
+        return f"District - {self.name}"
+
+
 class StateTimeseriesData(models.Model):
     date = models.DateTimeField(primary_key=True)
     confirmed = models.BigIntegerField()
@@ -32,4 +43,4 @@ class StateTimeseriesData(models.Model):
     active = models.BigIntegerField()
 
     def __str__(self):
-        return f"State Timeseries - {self.date}"
+        return f"Timeseries - {self.date}"
