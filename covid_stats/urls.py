@@ -20,6 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('world/', include('world.urls')),
     path('state/', include('state.urls')),
-    path('india/', include('india.urls')),
-    path('district', include('district.urls'))
+    path('india/', include('india.urls'))
 ]
