@@ -23,11 +23,11 @@ class OverallData(models.Model):
 
 class NewsArticle(models.Model):
     source_name = models.CharField(max_length=50)
-    authors = models.CharField(max_length=200)
-    title = models.CharField(max_length=100)
+    authors = models.CharField(max_length=300)
+    title = models.CharField(max_length=300)
     description = models.CharField(max_length=1000)
-    news_url = models.CharField(max_length=300)
-    news_image_url = models.CharField(max_length=300)
+    news_url = models.CharField(max_length=400)
+    news_image_url = models.CharField(max_length=400)
     published_time = models.DateTimeField()
     content = models.CharField(max_length=1000)
 
