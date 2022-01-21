@@ -1,11 +1,17 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from . import data
-from .serializers import OverallDataSerializer
+from . import data, news
+from .serializers import OverallDataSerializer, NewsArticleSerializer
 
 
 # Create your views here.
+
+@api_view(['GET'])
+def get_news_headlines(request):
+    news_data = news.get_top_headlines()
+    serializer = NewsArticleSerializer(news_data, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])

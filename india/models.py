@@ -19,3 +19,21 @@ class OverallData(models.Model):
         if self.daily_confirmed == "0" or self.daily_confirmed == 0:
             return True
         return False
+
+
+class NewsArticle(models.Model):
+    source_name = models.CharField(max_length=50)
+    authors = models.CharField(max_length=200)
+    title = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000)
+    news_url = models.CharField(max_length=300)
+    news_image_url = models.CharField(max_length=300)
+    published_time = models.DateTimeField()
+    content = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.title
+
+
+class GeneralData(models.Model):
+    last_updated_time = models.DateTimeField(primary_key=True)
