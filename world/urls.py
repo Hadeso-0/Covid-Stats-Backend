@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.get_overall_data),
+    path('news/', views.get_news),
     path('region/info/', views.get_region_info_list),
     path('region/info/<str:code>/', views.get_region_info),
     path('region/data/<str:code>/', views.get_region_data),
