@@ -1,6 +1,6 @@
 import pandas as pd
 from .models import OverallData
-import numpy
+import numpy, ssl
 
 url_list = {
     'india_timeseries': "https://api.covid19tracker.in/data/csv/latest/case_time_series.csv"
@@ -8,6 +8,7 @@ url_list = {
 
 
 def get_current_data():
+    ssl._create_default_https_context = ssl._create_unverified_context
     df = pd.read_csv(url_list['india_timeseries'])
     ind = len(df) - 1
     current_data = get_model_from_df(df, ind)
@@ -18,17 +19,14 @@ def get_current_data():
         return current_data
 
 
-def get_timeseries_data(range_type):
+def get_timeseries_data():
+    ssl._create_default_https_context = ssl._create_unverified_context
     df = pd.read_csv(url_list['india_timeseries'])
 
-    end = len(df)
-    if get_model_from_df(df, end-1).is_empty():
-        end = end - 1
     start = 0
-    if range_type == 'week':
-        start = end - 7
-    elif range_type == 'month':
-        start = end - 30
+    end = len(df)
+    if get_model_from_df(df, end - 1).is_empty():
+        end = end - 1
 
     timeseries_data = []
     for row in range(start, end):
@@ -38,12 +36,15 @@ def get_timeseries_data(range_type):
 
 def get_model_from_df(df, row):
     date = df.loc[row, 'Date_YMD']
-    total_confirmed = check_if_blank(df.loc[row, 'Total Confirmed'])
-    total_recovered = check_if_blank(df.loc[row, 'Total Recovered'])
-    total_deceased = check_if_blank(df.loc[row, 'Total Deceased'])
-    daily_confirmed = check_if_blank(df.loc[row, 'Daily Confirmed'])
-    daily_recovered = check_if_blank(df.loc[row, 'Daily Recovered'])
-    daily_deceased = check_if_blank(df.loc[row, 'Daily Deceased'])
+    total_confirmed = int(check_if_blank(df.loc[row, 'Total Confirmed']))
+    total_recovered = int(check_if_blank(df.loc[row, 'Total Recovered']))
+    total_deceased = int(check_if_blank(df.loc[row, 'Total Deceased']))
+    daily_confirmed = int(check_if_blank(df.loc[row, 'Daily Confirmed']))
+    daily_recovered = int(check_if_blank(df.loc[row, 'Daily Recovered']))
+    daily_deceased = int(check_if_blank(df.loc[row, 'Daily Deceased']))
+
+    total_active = total_confirmed - (total_recovered + total_deceased)
+    daily_active = daily_confirmed - (daily_recovered + daily_deceased)
 
     data_entry = OverallData(
         date=date,
@@ -52,7 +53,9 @@ def get_model_from_df(df, row):
         total_recovered=total_recovered,
         daily_confirmed=daily_confirmed,
         daily_recovered=daily_recovered,
-        daily_deceased=daily_deceased
+        daily_deceased=daily_deceased,
+        total_active=total_active,
+        daily_active=daily_active
     )
 
     return data_entry
