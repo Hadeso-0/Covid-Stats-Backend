@@ -24,5 +24,5 @@ urlpatterns = [
     path('state/data/<str:state_code>/timeseries/', views.get_state_data_timeseries),
     path('state/data/<str:state_code>/districts/', views.get_district_data_list),
     path('state/data/<str:state_code>/districts/<str:district_name>/', views.get_district_data),
-    path('state/data/<str:state_code>/districts/<str:district_name>/timeseries', views.get_district_data_timeseries)
+    path('state/data/<str:state_code>/districts/<str:district_name>/timeseries/', views.get_district_data_timeseries)
 ]

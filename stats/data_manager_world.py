@@ -221,6 +221,11 @@ def initialize_data():
                 print(f"Adding {region_code} in Country Data")
                 region_info.save()
 
+        country_list = CountryInfo.objects.all()
+        for country in country_list:
+            country.region_name_who = get_region_name_from_code(country.region_code_who)
+            country.save()
+
 
 def check_if_blank(entry):
     if entry == '' or numpy.isnan(entry):
