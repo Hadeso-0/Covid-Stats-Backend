@@ -13,7 +13,10 @@ def get_overall_data():
     ssl._create_default_https_context = ssl._create_unverified_context
     df = pd.read_csv(url_list['india_timeseries'])
     ind = len(df) - 1
-    return get_model_from_df(df, ind)
+    data = get_model_from_df(df, ind)
+    if data.daily_confirmed == 0:
+        return get_model_from_df(df, ind-1)
+    return data
 
 
 def get_timeseries_data():
