@@ -36,7 +36,7 @@ def get_state_date(code):
     df = pandas.read_csv(url_list['state_timeseries'])
 
     gk = df.groupby('State')
-    state_df = gk.get_group(get_state_name_from_code(code)).iloc[-2:]
+    state_df = gk.get_group(get_state_name_from_code(code)).iloc[-3:]
 
     data_list = []
     for index, row in state_df.iterrows():
@@ -48,7 +48,10 @@ def get_state_date(code):
         data_list[i].daily_deceased = data_list[i].total_deceased - data_list[i - 1].total_deceased
         data_list[i].daily_active = data_list[i].total_active - data_list[i - 1].total_active
 
-    return data_list[len(data_list) - 1]
+    current_data = data_list[len(data_list) - 1]
+    if current_data.daily_confirmed == 0:
+        return data_list[len(data_list) - 2]
+    return current_data
 
 
 def get_state_timeseries(code):
