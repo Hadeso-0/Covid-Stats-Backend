@@ -8,6 +8,8 @@ from . import data_manager_india as india_mgr
 from . import data_manager_state as state_mgr
 from .enums import RegionType
 
+import uuid
+
 
 @api_view(['GET'])
 def get_global_data(request):

@@ -74,3 +74,7 @@ class NewsArticle(models.Model):
 class Properties(models.Model):
     india_news_last_updated_time = models.DateTimeField(null=True)
     world_news_last_updated_time = models.DateTimeField(null=True)
+
+
+class ThreadSafe(models.Model):
+    key = models.CharField(max_length=200, unique=True)

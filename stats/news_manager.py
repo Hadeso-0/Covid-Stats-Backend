@@ -1,13 +1,35 @@
 from newsapi import NewsApiClient
-from .models import NewsArticle, Properties
+from .models import NewsArticle, Properties, ThreadSafe
 import datetime
 from .enums import RegionType
+from contextlib import contextmanager
+from django.db.transaction import atomic
+
+import uuid
 
 news_api = NewsApiClient(api_key="a5a55eafdde54c0eb6509599dcb5997a")
 
 
+@contextmanager
+def lock(key):
+    pk = ThreadSafe.objects.get_or_create(key=key)[0].pk
+    try:
+        objs = ThreadSafe.objects.filter(pk=pk).select_for_update()
+        with atomic():
+            list(objs)
+            yield None
+    finally:
+        pass
+
+
 def get_top_headlines(region):
-    update_top_headlines(region)
+    request_id = str(uuid.uuid4())
+    print(f"Waiting for lock for {request_id}")
+    with lock("lock"):
+        print(f"Acquiring lock for {request_id}")
+        update_top_headlines(region)
+        print(f"Releasing lock for {request_id}")
+
     headlines = NewsArticle.objects.filter(region_type=region.name).order_by('-published_time')
     return headlines
 
