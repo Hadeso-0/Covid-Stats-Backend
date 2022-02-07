@@ -56,7 +56,7 @@ def update_time(region):
 
 
 def update_news_db(region):
-    NewsArticle.objects.filter(region_type=region).delete()
+    NewsArticle.objects.filter(region_type=region.name).delete()
     if region == RegionType.GLOBAL:
         news_dict = news_api.get_top_headlines(
             q='covid'
