@@ -29,6 +29,8 @@ def get_timeseries_data():
     timeseries_data = []
     for row in range(start, end):
         timeseries_data.append(get_model_from_df(df, row))
+    if timeseries_data[-1].daily_confirmed == 0:
+        timeseries_data.pop()
     return timeseries_data
 
 
