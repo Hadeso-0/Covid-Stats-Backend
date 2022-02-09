@@ -147,7 +147,7 @@ def get_state_data(request, state_code):
 @api_view(['GET'])
 def get_state_data_timeseries(request, state_code):
     data = state_mgr.get_state_timeseries(state_code)
-    serializer = serializers.StateDataSerializer(data, many=True)
+    serializer = serializers.StateTimeSeriesDataSerializer(data, many=True)
     return Response(serializer.data)
 
 
