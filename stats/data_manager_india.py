@@ -2,7 +2,7 @@ import pandas as pd
 from .models import CovidStats
 import numpy
 import ssl
-from . import  enums
+from .enums import RegionType
 
 url_list = {
     'india_timeseries': "https://api.covid19tracker.in/data/csv/latest/case_time_series.csv"
@@ -15,7 +15,7 @@ def get_overall_data():
     ind = len(df) - 1
     data = get_model_from_df(df, ind)
     if data.daily_confirmed == 0:
-        return get_model_from_df(df, ind-1)
+        return get_model_from_df(df, ind - 1)
     return data
 
 
@@ -29,8 +29,10 @@ def get_timeseries_data():
     timeseries_data = []
     for row in range(start, end):
         timeseries_data.append(get_model_from_df(df, row))
+
     if timeseries_data[-1].daily_confirmed == 0:
         timeseries_data.pop()
+
     return timeseries_data
 
 
@@ -46,7 +48,7 @@ def get_model_from_df(df, row):
     total_active = total_confirmed - (total_recovered + total_deceased)
     daily_active = daily_confirmed - (daily_recovered + daily_deceased)
 
-    region_type = enums.RegionType.INDIA.name
+    region_type = RegionType.INDIA.name
 
     data_entry = CovidStats(
         region_type=region_type,

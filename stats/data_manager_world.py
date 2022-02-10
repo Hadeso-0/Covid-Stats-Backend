@@ -1,6 +1,8 @@
-import ssl, pandas, numpy
-from .models import WhoRegionInfo, CountryInfo, CovidStats
+import numpy
+import pandas
+
 from . import enums
+from .models import WhoRegionInfo, CountryInfo, CovidStats
 
 url_list = {
     'country_timeseries': "https://covid19.who.int/WHO-COVID-19-global-data.csv",
@@ -9,14 +11,13 @@ url_list = {
 
 
 def get_global_data():
-    ssl._create_default_https_context = ssl._create_unverified_context
     df = pandas.read_csv(url_list['country_current'])
     return get_country_model_from_df(df, 'Global')
 
 
 def get_region_info_list():
     initialize_data()
-    data_list = WhoRegionInfo.objects.all()
+    data_list = WhoRegionInfo.objects.all().order_by('region_code_who')
     return data_list
 
 
@@ -64,7 +65,6 @@ def get_region_data(code):
 
 
 def get_region_country_data_list(code):
-    ssl._create_default_https_context = ssl._create_unverified_context
     df = pandas.read_csv(url_list['country_current'])
 
     gk = df.groupby('Name')
