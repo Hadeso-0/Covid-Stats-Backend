@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('about/developers/', views.get_about_developer),
+    path('about/app/', views.get_about_app),
     path('world/global/', views.get_global_data),
     path('world/news/', views.get_world_news),
     path('world/region/info/', views.get_who_region_info_list),

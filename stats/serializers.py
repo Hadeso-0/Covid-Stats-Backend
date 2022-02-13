@@ -1,5 +1,25 @@
 from rest_framework import serializers
-from .models import CovidStats, NewsArticle, WhoRegionInfo, CountryInfo, StateInfo
+from .models import CovidStats, NewsArticle, WhoRegionInfo, CountryInfo, StateInfo, Developer, AboutApp
+
+
+class DeveloperSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Developer
+        fields = (
+            'name',
+            'tags',
+            'linkedin',
+            'behance',
+            'github',
+            'mail',
+            'image_url'
+        )
+
+
+class AboutAppSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutApp
+        fields = '__all__'
 
 
 class NewsArticleSerializer(serializers.ModelSerializer):

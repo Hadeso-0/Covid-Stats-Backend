@@ -3,6 +3,21 @@ from django.db import models
 
 # Create your models here.
 
+
+class Developer(models.Model):
+    name = models.CharField(max_length=100, default="")
+    tags = models.CharField(max_length=400, default="")
+    linkedin = models.CharField(max_length=400, default="")
+    behance = models.CharField(max_length=400, default="")
+    github = models.CharField(max_length=400, default="")
+    mail = models.CharField(max_length=400, default="")
+    image_url = models.CharField(max_length=400, default="")
+
+
+class AboutApp(models.Model):
+    app_link = models.CharField(max_length=400, default="")
+
+
 class WhoRegionInfo(models.Model):
     region_code_who = models.CharField(primary_key=True, max_length=10, default="")
     region_name_who = models.CharField(max_length=100, default="")

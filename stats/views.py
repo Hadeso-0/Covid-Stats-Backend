@@ -1,14 +1,26 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from . import serializers
+from . import serializers, models
 from . import news_manager as news_mgr
 from . import data_manager_world as world_mgr
 from . import data_manager_india as india_mgr
 from . import data_manager_state as state_mgr
 from .enums import RegionType
 
-import uuid
+
+@api_view(['GET'])
+def get_about_developer(request):
+    developers = models.Developer.objects.all()
+    serializer = serializers.DeveloperSerializer(developers, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_about_app(request):
+    about_app = models.AboutApp.objects.all()
+    serializer = serializers.AboutAppSerializer(about_app[0], many=False)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
