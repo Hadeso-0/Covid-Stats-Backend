@@ -1,5 +1,14 @@
 from rest_framework import serializers
-from .models import CovidStats, NewsArticle, WhoRegionInfo, CountryInfo, StateInfo, Developer, AboutApp
+from .models import AboutApp, Developer, DataSource, CovidStats, NewsArticle, WhoRegionInfo, CountryInfo, StateInfo
+
+
+class AboutAppSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutApp
+        fields = (
+            'play_store_link',
+            'about_content'
+        )
 
 
 class DeveloperSerializer(serializers.ModelSerializer):
@@ -16,10 +25,14 @@ class DeveloperSerializer(serializers.ModelSerializer):
         )
 
 
-class AboutAppSerializer(serializers.ModelSerializer):
+class DataSourceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AboutApp
-        fields = '__all__'
+        model = DataSource
+        fields = (
+            'source_name',
+            'source_description',
+            'source_url'
+        )
 
 
 class NewsArticleSerializer(serializers.ModelSerializer):

@@ -4,7 +4,13 @@ from django.db import models
 # Create your models here.
 
 
+class AboutApp(models.Model):
+    play_store_link = models.CharField(max_length=400, default="")
+    about_content = models.CharField(max_length=1000, default="")
+
+
 class Developer(models.Model):
+    order = models.IntegerField(primary_key=True, default=0)
     name = models.CharField(max_length=100, default="")
     tags = models.CharField(max_length=400, default="")
     linkedin = models.CharField(max_length=400, default="")
@@ -13,9 +19,17 @@ class Developer(models.Model):
     mail = models.CharField(max_length=400, default="")
     image_url = models.CharField(max_length=400, default="")
 
+    def __str__(self):
+        return self.name
 
-class AboutApp(models.Model):
-    app_link = models.CharField(max_length=400, default="")
+
+class DataSource(models.Model):
+    source_name = models.CharField(primary_key=True, max_length=100, default="")
+    source_description = models.CharField(max_length=400, default="")
+    source_url = models.CharField(max_length=400, default="")
+
+    def __str__(self):
+        return self.source_name
 
 
 class WhoRegionInfo(models.Model):

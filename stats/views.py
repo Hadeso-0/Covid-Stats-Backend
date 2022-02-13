@@ -1,7 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from . import serializers, models
+from . import serializers
+from . import about_manager as about_mgr
 from . import news_manager as news_mgr
 from . import data_manager_world as world_mgr
 from . import data_manager_india as india_mgr
@@ -10,16 +11,23 @@ from .enums import RegionType
 
 
 @api_view(['GET'])
+def get_about_app(request):
+    about_app = about_mgr.get_about_app()
+    serializer = serializers.AboutAppSerializer(about_app, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 def get_about_developer(request):
-    developers = models.Developer.objects.all()
+    developers = about_mgr.get_developer_list()
     serializer = serializers.DeveloperSerializer(developers, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
-def get_about_app(request):
-    about_app = models.AboutApp.objects.all()
-    serializer = serializers.AboutAppSerializer(about_app[0], many=False)
+def get_about_source(request):
+    developers = about_mgr.get_source_list()
+    serializer = serializers.DataSourceSerializer(developers, many=True)
     return Response(serializer.data)
 
 
