@@ -10,7 +10,7 @@ class AboutApp(models.Model):
 
 
 class Developer(models.Model):
-    order = models.IntegerField(primary_key=True)
+    order = models.IntegerField(default=0)
     name = models.CharField(max_length=100, default="")
     tags = models.CharField(max_length=400, default="")
     linkedin = models.CharField(max_length=400, default="")
