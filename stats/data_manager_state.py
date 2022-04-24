@@ -23,11 +23,16 @@ def get_state_info(code):
 
 def get_all_state_data():
     ssl._create_default_https_context = ssl._create_unverified_context
-    df = pandas.read_csv(url_list['state_current'])
+#    df = pandas.read_csv(url_list['state_current'])
 
     data_list = []
-    for index in range(len(df)):
-        data_list.append(get_state_model_from_df(df, index))
+#    for index in range(len(df)):
+#        data_list.append(get_state_model_from_df(df, index))
+
+    state_list = get_state_info_list()
+    for state_info in state_list:
+        data_list.append(get_state_date(state_info.state_code))
+
     return data_list
 
 
